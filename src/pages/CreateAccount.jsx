@@ -1,9 +1,10 @@
 /**
  * Create Official Account Form
- * Screen 5: Create Account - matches wireframe exactly
+ * Enhanced production-ready design with better UX
  */
 import { useState } from 'react';
-import { Button, Input, Select, Textarea, Card } from '../components/common';
+import { HiUser, HiGlobe, HiTag, HiDocumentText, HiMail, HiPhotograph, HiX, HiArrowLeft } from 'react-icons/hi';
+import { Button, Input, Select, Textarea } from '../components/common';
 import { Header } from '../components/layout';
 
 export default function CreateAccount({ 
@@ -105,157 +106,227 @@ export default function CreateAccount({
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-lighter to-white">
       <Header
         showAccountSwitcher={false}
         onUserMenuClick={null}
+        className="header-enhanced"
+        headerRight={
+          <div className="header-right">
+            <a 
+              href="#" 
+              onClick={(e) => {
+                e.preventDefault();
+                onCancel?.();
+              }}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-secondary no-underline font-medium hover:bg-primary-light hover:text-primary transition-all"
+            >
+              <HiArrowLeft className="text-base" />
+              <span>Cancel</span>
+            </a>
+          </div>
+        }
       />
       
-      <div className="p-10 max-w-[600px] mx-auto">
-        <h1 className="mb-[30px] text-2xl text-dark">Create Official Account</h1>
+      <div className="p-6 md:p-10 max-w-2xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">Create Official Account</h1>
+          <p className="text-sm md:text-base text-dark-lighter">
+            Fill in the details below to create your new {accountType === 'business' ? 'business' : 'creator'} account
+          </p>
+        </div>
         
         <form onSubmit={handleSubmit}>
-          <Card>
-            <Input
-              label="Account Name"
-              required
-              value={formData.accountName}
-              onChange={(e) => handleInputChange('accountName', e.target.value)}
-              placeholder="Enter account name"
-              error={!!errors.accountName}
-              errorMessage={errors.accountName}
-            />
-            
-            <Select
-              label="Region"
-              required
-              value={formData.region}
-              onChange={(e) => handleInputChange('region', e.target.value)}
-              placeholder="Select region"
-              options={regions}
-              error={!!errors.region}
-              errorMessage={errors.region}
-            />
-            
-            <div className="form-group">
-              <label className="form-label">
-                Category <span className="text-danger">*</span>
-              </label>
-              <select
-                className={`form-select ${errors.category ? 'error' : ''}`}
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-              >
-                <option value="">Select category</option>
-                <optgroup label="Business Categories">
-                  {businessCategories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="Creator Categories">
-                  {creatorCategories.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </optgroup>
-              </select>
-              {errors.category && (
-                <div className="error-message">{errors.category}</div>
-              )}
-            </div>
-            
-            <Textarea
-              label="Description"
-              value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Enter account description"
-              rows={4}
-            />
-            
-            <div className="form-group">
-              <label className="form-label">
-                Contact Email or Phone <span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                className={`form-input ${errors.contact ? 'error' : ''}`}
-                value={formData.contact}
-                onChange={(e) => handleInputChange('contact', e.target.value)}
-                placeholder="Enter email or phone number"
+          <div className="bg-white rounded-lg shadow-xl border border-dark-20 p-6 md:p-8">
+            <div className="space-y-6">
+              <Input
+                label="Account Name"
+                required
+                icon={HiUser}
+                value={formData.accountName}
+                onChange={(e) => handleInputChange('accountName', e.target.value)}
+                placeholder="Enter account name"
+                error={!!errors.accountName}
+                errorMessage={errors.accountName}
               />
-              {errors.contact && (
-                <div className="error-message">{errors.contact}</div>
-              )}
-              <div className="text-xs text-dark-lighter mt-1.5">
-                Used for account verification and important notifications
+              
+              <Select
+                label="Region"
+                required
+                icon={HiGlobe}
+                value={formData.region}
+                onChange={(e) => handleInputChange('region', e.target.value)}
+                placeholder="Select region"
+                options={regions}
+                error={!!errors.region}
+                errorMessage={errors.region}
+              />
+              
+              <div className="mb-5">
+                <label className="block mb-2 font-medium text-dark text-sm">
+                  Category <span className="text-danger">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-lighter pointer-events-none">
+                    <HiTag className="w-5 h-5" />
+                  </div>
+                  <select
+                    className={`w-full pl-10 pr-9 py-2.5 border rounded-sm text-sm text-dark bg-white appearance-none cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-offset-0 ${
+                      errors.category
+                        ? 'border-danger focus:border-danger focus:ring-danger/20'
+                        : 'border-dark-lighter focus:border-primary focus:ring-primary/20'
+                    }`}
+                    value={formData.category}
+                    onChange={(e) => handleInputChange('category', e.target.value)}
+                    style={{
+                      backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23032625' fill-opacity='0.5' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 10px center',
+                      backgroundSize: '12px'
+                    }}
+                  >
+                    <option value="">Select category</option>
+                    <optgroup label="Business Categories">
+                      {businessCategories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Creator Categories">
+                      {creatorCategories.map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </optgroup>
+                  </select>
+                </div>
+                {errors.category && (
+                  <div className="text-danger text-xs mt-1.5">{errors.category}</div>
+                )}
+              </div>
+              
+              <Textarea
+                label="Description"
+                icon={HiDocumentText}
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                placeholder="Enter account description"
+                rows={4}
+              />
+              
+              <div className="mb-5">
+                <label className="block mb-2 font-medium text-dark text-sm">
+                  Contact Email or Phone <span className="text-danger">*</span>
+                </label>
+                <div className="relative">
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-lighter pointer-events-none">
+                    <HiMail className="w-5 h-5" />
+                  </div>
+                  <input
+                    type="text"
+                    className={`w-full pl-10 pr-3 py-2.5 border rounded-sm text-sm text-dark placeholder:text-dark-lightest transition-all focus:outline-none focus:ring-2 focus:ring-offset-0 ${
+                      errors.contact
+                        ? 'border-danger focus:border-danger focus:ring-danger/20'
+                        : 'border-dark-lighter focus:border-primary focus:ring-primary/20'
+                    }`}
+                    value={formData.contact}
+                    onChange={(e) => handleInputChange('contact', e.target.value)}
+                    placeholder="Enter email or phone number"
+                  />
+                </div>
+                {errors.contact && (
+                  <div className="text-danger text-xs mt-1.5">{errors.contact}</div>
+                )}
+                <div className="text-xs text-dark-lighter mt-1.5">
+                  Used for account verification and important notifications
+                </div>
+              </div>
+            
+              <div className="mb-5">
+                <label className="block mb-2 font-medium text-dark text-sm">Logo</label>
+                {!logoPreview ? (
+                  <div
+                    className="border-2 border-dashed border-dark-lighter rounded-lg p-8 text-center cursor-pointer hover:border-primary hover:bg-primary-light transition-all"
+                    onClick={() => document.getElementById('logo-upload').click()}
+                  >
+                    <input
+                      type="file"
+                      id="logo-upload"
+                      accept="image/png,image/jpeg,image/jpg"
+                      onChange={handleLogoUpload}
+                      className="hidden"
+                    />
+                    <div className="flex flex-col items-center">
+                      <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center mb-4">
+                        <HiPhotograph className="w-8 h-8 text-primary" />
+                      </div>
+                      <div className="text-sm font-medium text-dark mb-1">Click to upload or drag and drop</div>
+                      <div className="text-xs text-dark-lighter">PNG, JPG up to 5MB</div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="relative inline-block">
+                      <img 
+                        src={logoPreview} 
+                        alt="Logo preview" 
+                        className="max-w-full max-h-[300px] rounded-lg border-2 border-dark-20 shadow-md" 
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setLogoPreview(null);
+                          setFormData(prev => ({ ...prev, logo: null }));
+                          document.getElementById('logo-upload').value = '';
+                        }}
+                        className="absolute top-2 right-2 w-8 h-8 bg-danger text-white rounded-full flex items-center justify-center hover:bg-danger/90 transition-colors shadow-lg"
+                      >
+                        <HiX className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+                {errors.logo && (
+                  <div className="text-danger text-xs mt-1.5">{errors.logo}</div>
+                )}
               </div>
             </div>
             
-            <div className="form-group">
-              <label className="form-label">Logo</label>
-              {!logoPreview ? (
-                <div className="upload-area" onClick={() => document.getElementById('logo-upload').click()}>
-                  <input
-                    type="file"
-                    id="logo-upload"
-                    accept="image/png,image/jpeg,image/jpg"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(3, 38, 37, 0.5)" strokeWidth="2" className="mb-2.5">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                    <polyline points="21 15 16 10 5 21"></polyline>
-                  </svg>
-                  <div>Click to upload or drag and drop</div>
-                  <div className="text-xs text-dark-lighter mt-1.5">PNG, JPG up to 5MB</div>
-                </div>
-              ) : (
-                <div>
-                  <img src={logoPreview} alt="Logo preview" className="max-w-full max-h-[300px] rounded-sm border border-dark-20 mb-2.5" />
-                  <div className="flex gap-2.5">
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={() => {
-                        setLogoPreview(null);
-                        setFormData(prev => ({ ...prev, logo: null }));
-                        document.getElementById('logo-upload').value = '';
-                      }}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                </div>
-              )}
-              {errors.logo && (
-                <div className="error-message">{errors.logo}</div>
-              )}
-            </div>
-            
-            <div className="action-buttons mt-[30px] pt-5 border-t border-dark-20">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-dark-20">
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 onClick={onCancel}
+                className="flex-1 sm:flex-none px-6 py-3"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 variant="primary"
+                className="flex-1 sm:flex-none px-8 py-3 font-semibold shadow-lg hover:shadow-xl"
               >
                 Create Account
               </Button>
             </div>
             
             {/* Info Box */}
-            <div className="info-box mt-5">
-              <div className="info-box-title">ℹ️ Account Verification</div>
-              <div className="info-box-text">
-                Account verification unlocks full features. After creation, you'll be redirected to your account dashboard. Verification can be started later from Profile & Settings.
+            <div className="mt-6 p-4 bg-primary-light border-l-4 border-primary rounded-md">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-5 h-5 text-primary mt-0.5">
+                  <svg fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <div className="font-semibold text-sm text-dark mb-1">Account Verification</div>
+                  <div className="text-xs text-dark-lighter leading-relaxed">
+                    Account verification unlocks full features. After creation, you'll be redirected to your account dashboard. Verification can be started later from Profile & Settings.
+                  </div>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
         </form>
       </div>
     </div>

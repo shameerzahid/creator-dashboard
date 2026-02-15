@@ -1,8 +1,9 @@
 /**
  * Inbox Page
- * Screen 11: Inbox - matches wireframe exactly
+ * Screen 11: Inbox - Professional production-ready design
  */
 import { useState } from 'react';
+import { HiSearch, HiPaperAirplane, HiDocumentText, HiCheck, HiCheckCircle, HiClock, HiUserCircle } from 'react-icons/hi';
 import { Button, Input } from '../components/common';
 import { Layout } from '../components/layout';
 
@@ -101,14 +102,13 @@ export default function Inbox({
   };
 
   const getStatusIcon = (status) => {
-    if (status === 'seen' || status === 'delivered') {
-      return (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      );
+    if (status === 'seen') {
+      return <HiCheckCircle className="w-3.5 h-3.5 text-primary" />;
     }
-    return null;
+    if (status === 'delivered') {
+      return <HiCheck className="w-3.5 h-3.5 text-dark-lighter" />;
+    }
+    return <HiClock className="w-3.5 h-3.5 text-dark-lighter" />;
   };
 
   return (
@@ -130,152 +130,184 @@ export default function Inbox({
       }}
       className="inbox-layout"
     >
-      <div className="inbox-container">
-        {/* Conversation List */}
-        <div className="conversation-list">
-          <div className="conversation-search">
-            <div className="search-icon-wrapper">
-              <input
-                type="text"
-                className="conversation-search-input"
-                placeholder="Search conversations..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <svg
-                className="search-icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(3, 38, 37, 0.5)"
-                strokeWidth="2"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-              </svg>
+      <div className="inbox-page-container">
+        {/* Header */}
+        {/* <div className="inbox-header">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-dark mb-1">Inbox</h1>
+            <p className="text-xs md:text-sm text-dark-lighter">Manage your conversations and customer messages</p>
+          </div>
+        </div> */}
+
+        <div className="inbox-container">
+          {/* Conversation List */}
+          <div className="conversation-list">
+            <div className="conversation-search">
+              <div className="search-icon-wrapper">
+                <HiSearch className="search-icon" />
+                <input
+                  type="text"
+                  className="conversation-search-input"
+                  placeholder="Search conversations..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="conversation-list-content">
+              {conversationsToShow.map((conversation) => (
+                <div
+                  key={conversation.id}
+                  className={`conversation-item ${
+                    activeConversation?.id === conversation.id ? 'active' : ''
+                  } ${conversation.unread ? 'unread' : ''}`}
+                  onClick={() => handleSelectConversation(conversation)}
+                >
+                  <div className="conversation-avatar">
+                    <HiUserCircle className="w-10 h-10 text-dark-lighter" />
+                    {conversation.online && (
+                      <span className="conversation-online-indicator"></span>
+                    )}
+                  </div>
+                  <div className="conversation-content">
+                    <div className="conversation-name">
+                      <span className="font-semibold text-dark">{conversation.name}</span>
+                      {conversation.unread && (
+                        <span className={`unread-badge ${conversation.unreadCount > 0 ? 'has-count' : ''}`}>
+                          {conversation.unreadCount > 0 ? conversation.unreadCount : ''}
+                        </span>
+                      )}
+                    </div>
+                    <div className="conversation-preview">{conversation.preview}</div>
+                    <div className="text-xs text-dark-lighter mt-1">{conversation.time}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {conversationsToShow.map((conversation) => (
-            <div
-              key={conversation.id}
-              className={`conversation-item ${
-                activeConversation?.id === conversation.id ? 'active' : ''
-              } ${conversation.unread ? 'unread' : ''}`}
-              onClick={() => handleSelectConversation(conversation)}
-            >
-              <div className="conversation-name">
-                <span>{conversation.name}</span>
-                {conversation.unread && (
-                  <span className={`unread-badge ${conversation.unreadCount > 0 ? 'has-count' : ''}`}>
-                    {conversation.unreadCount > 0 ? conversation.unreadCount : ''}
-                  </span>
-                )}
-              </div>
-              <div className="conversation-preview">{conversation.preview}</div>
-              <div className="text-xs text-dark-lighter mt-1.5">{conversation.time}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Message Thread */}
-        <div className="message-thread">
-          {activeConversation && (
-            <>
-              <div className="message-header">
-                <div className="font-semibold text-lg text-dark">{activeConversation.name}</div>
-                <div className="text-xs text-dark-lighter mt-1.5 flex items-center gap-2">
-                  <span className={`status-indicator ${activeConversation.online ? 'status-online' : 'status-offline'}`}></span>
-                  {activeConversation.online ? 'Online' : 'Offline'}
-                </div>
-              </div>
-
-              <div className="messages">
-                {activeConversation.messages?.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`message ${message.sender === 'You' ? 'message-sent' : ''}`}
-                  >
-                    <div className="font-semibold mb-1.5 text-dark">{message.sender}</div>
-                    <div>{message.text}</div>
-                    <div className={`flex items-center gap-2 mt-1.5 ${message.sender === 'You' ? 'justify-end' : ''}`}>
-                      <div className="text-xs text-dark-lighter">{message.time}</div>
-                      <span className="text-[10px] text-dark-light">•</span>
-                      <span className="text-xs text-dark-lighter flex items-center gap-1">
-                        {getStatusIcon(message.status)}
-                        {message.status === 'seen' ? 'Seen' : message.status === 'delivered' ? 'Delivered' : ''}
-                      </span>
+          {/* Message Thread */}
+          <div className="message-thread">
+            {activeConversation ? (
+              <>
+                <div className="message-header">
+                  <div className="message-header-user">
+                    <HiUserCircle className="w-10 h-10 text-dark-lighter" />
+                    <div className="message-header-info">
+                      <div className="font-semibold text-lg text-dark">{activeConversation.name}</div>
+                      <div className="text-xs text-dark-lighter mt-1 flex items-center gap-2">
+                        <span className={`status-indicator ${activeConversation.online ? 'status-online' : 'status-offline'}`}></span>
+                        {activeConversation.online ? 'Online' : 'Offline'}
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="message-input-area">
-                {/* Quick Replies (Future Feature) */}
-                <div className="p-2.5 bg-dark-03 rounded-sm border border-dashed border-dark-20 mb-2.5">
-                  <div className="flex items-center mb-2">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="rgba(3, 38, 37, 0.5)"
-                      strokeWidth="2"
-                      className="mr-1.5"
-                    >
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                      <polyline points="14 2 14 8 20 8"></polyline>
-                      <line x1="16" y1="13" x2="8" y2="13"></line>
-                    </svg>
-                    <div className="text-xs font-semibold text-dark">Quick Replies (Coming Soon)</div>
-                  </div>
-                  <div className="flex gap-2 flex-wrap">
-                    <button
-                      className="btn btn-outline"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                      disabled
-                    >
-                      Thanks for contacting us!
-                    </button>
-                    <button
-                      className="btn btn-outline"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                      disabled
-                    >
-                      We'll get back to you soon
-                    </button>
-                    <button
-                      className="btn btn-outline"
-                      style={{ padding: '6px 12px', fontSize: '12px' }}
-                      disabled
-                    >
-                      Your order is being processed
-                    </button>
-                  </div>
-                  <div className="text-[11px] text-dark-lighter mt-1.5 italic">
-                    Pre-configured quick responses for faster customer support
-                  </div>
                 </div>
 
-                <input
-                  type="text"
-                  className="message-input"
-                  placeholder="Type a message..."
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSendMessage();
-                    }
-                  }}
-                />
-                <div className="mt-2.5">
-                  <Button variant="primary" onClick={handleSendMessage}>
-                    Send
-                  </Button>
+                <div className="messages">
+                  {activeConversation.messages?.length > 0 ? (
+                    activeConversation.messages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={`message ${message.sender === 'You' ? 'message-sent' : 'message-received'}`}
+                      >
+                        {message.sender !== 'You' && (
+                          <div className="message-avatar">
+                            <HiUserCircle className="w-8 h-8 text-dark-lighter" />
+                          </div>
+                        )}
+                        <div className="message-content">
+                          {message.sender !== 'You' && (
+                            <div className="font-semibold mb-1 text-sm text-dark">{message.sender}</div>
+                          )}
+                          <div className={`message-bubble ${message.sender === 'You' ? 'message-bubble-sent' : 'message-bubble-received'}`}>
+                            <div className="text-dark">{message.text}</div>
+                          </div>
+                          <div className={`flex items-center gap-2 mt-1.5 ${message.sender === 'You' ? 'justify-end' : ''}`}>
+                            <div className="text-xs text-dark-lighter">{message.time}</div>
+                            {message.sender === 'You' && (
+                              <>
+                                <span className="text-[10px] text-dark-light">•</span>
+                                <span className="text-xs text-dark-lighter flex items-center gap-1">
+                                  {getStatusIcon(message.status)}
+                                  {message.status === 'seen' ? 'Seen' : message.status === 'delivered' ? 'Delivered' : 'Sending'}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="messages-empty">
+                      <HiDocumentText className="w-12 h-12 text-dark-lighter mx-auto mb-3" />
+                      <p className="text-sm text-dark-lighter text-center">No messages yet. Start the conversation!</p>
+                    </div>
+                  )}
                 </div>
+
+                <div className="message-input-area">
+                  {/* Quick Replies (Future Feature) */}
+                  <div className="message-quick-replies">
+                    <div className="flex items-center mb-3">
+                      <HiDocumentText className="w-4 h-4 text-primary mr-2" />
+                      <div className="text-xs font-semibold text-dark">Quick Replies (Coming Soon)</div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap mb-3">
+                      <button
+                        className="px-3 py-1.5 text-xs border border-dark-lighter rounded-md text-dark-lighter hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                      >
+                        Thanks for contacting us!
+                      </button>
+                      <button
+                        className="px-3 py-1.5 text-xs border border-dark-lighter rounded-md text-dark-lighter hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                      >
+                        We'll get back to you soon
+                      </button>
+                      <button
+                        className="px-3 py-1.5 text-xs border border-dark-lighter rounded-md text-dark-lighter hover:border-primary hover:text-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                      >
+                        Your order is being processed
+                      </button>
+                    </div>
+                    <div className="text-[11px] text-dark-lighter italic">
+                      Pre-configured quick responses for faster customer support
+                    </div>
+                  </div>
+
+                  <div className="message-input-wrapper">
+                    <input
+                      type="text"
+                      className="message-input"
+                      placeholder="Type a message..."
+                      value={messageText}
+                      onChange={(e) => setMessageText(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSendMessage();
+                        }
+                      }}
+                    />
+                    <button
+                      className="message-send-button"
+                      onClick={handleSendMessage}
+                      disabled={!messageText.trim()}
+                    >
+                      <HiPaperAirplane className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="messages-empty">
+                <HiDocumentText className="w-12 h-12 text-dark-lighter mx-auto mb-3" />
+                <p className="text-sm text-dark-lighter text-center">Select a conversation to start messaging</p>
               </div>
-            </>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </Layout>

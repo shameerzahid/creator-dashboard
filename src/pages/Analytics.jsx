@@ -1,8 +1,9 @@
 /**
  * Analytics Page
- * Screen 12: Analytics - matches wireframe exactly
+ * Screen 12: Analytics - Professional production-ready design
  */
 import { useState } from 'react';
+import { HiChartBar, HiUsers, HiHeart, HiDocumentText, HiCalendar, HiTrendingUp, HiEye, HiClock } from 'react-icons/hi';
 import { Button, Card, Select } from '../components/common';
 import { Layout } from '../components/layout';
 
@@ -106,131 +107,225 @@ export default function Analytics({
         onLogout: () => window.location.href = '/',
       }}
     >
-      <div className="flex justify-between items-center mb-[30px] flex-wrap gap-4">
-        <h1 className="text-2xl text-dark">Analytics</h1>
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <label className="text-sm text-dark-lighter">Date Range:</label>
-          <select
-            className="form-select"
-            style={{ width: 'auto', minWidth: '150px' }}
-            value={dateRange}
-            onChange={handleDateRangeChange}
-          >
-            <option value="7days">Last 7 days</option>
-            <option value="30days">Last 30 days</option>
-            <option value="90days">Last 90 days</option>
-            <option value="6months">Last 6 months</option>
-            <option value="year">Last year</option>
-            <option value="all">All time</option>
-            <option value="custom">Custom range</option>
-          </select>
-          {showCustomRange && (
-            <div className="flex gap-2 items-center flex-wrap">
-              <input
-                type="date"
-                className="form-input"
-                style={{ width: '140px', padding: '8px' }}
-                value={customStartDate}
-                onChange={(e) => setCustomStartDate(e.target.value)}
-              />
-              <span className="text-dark-lighter">to</span>
-              <input
-                type="date"
-                className="form-input"
-                style={{ width: '140px', padding: '8px' }}
-                value={customEndDate}
-                onChange={(e) => setCustomEndDate(e.target.value)}
-              />
-              <Button variant="primary" onClick={handleApplyCustomRange} style={{ padding: '8px 16px' }}>
-                Apply
-              </Button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-3 mb-[30px]">
-        <div className="stat-card">
-          <div className="stat-value">{statsToShow.followers.toLocaleString()}</div>
-          <div className="stat-label">Total Followers</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{statsToShow.engagement.toLocaleString()}</div>
-          <div className="stat-label">Total Engagement</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{statsToShow.posts}</div>
-          <div className="stat-label">Total Posts</div>
-        </div>
-      </div>
-
-      {/* Post Engagement Chart */}
-      <Card>
-        <div className="card-title">Post Engagement</div>
-        <div className="p-5 bg-white rounded-sm" style={{ minHeight: '300px' }}>
-          {/* Bar Chart */}
-          <div className="relative flex items-end justify-around" style={{ height: '250px', padding: '20px 0 0 50px', borderBottom: '2px solid rgba(3, 38, 37, 0.2)' }}>
-            {/* Y-axis labels */}
-            <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[11px] text-dark-lighter" style={{ width: '40px', paddingBottom: '2px' }}>
-              <span>200</span>
-              <span>150</span>
-              <span>100</span>
-              <span>50</span>
-              <span style={{ marginBottom: '-2px' }}>0</span>
-            </div>
-            {/* Chart bars */}
-            <div className="flex items-end justify-around w-full gap-4">
-              {chartData.map((data, index) => {
-                const height = (data.value / maxValue) * 200;
-                return (
-                  <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                    <div
-                      className="w-full bg-primary rounded-t-sm"
-                      style={{ height: `${height}px`, maxWidth: '60px' }}
-                    ></div>
-                    <div className="text-[11px] text-dark-lighter">{data.day}</div>
-                  </div>
-                );
-              })}
+      <div className="analytics-page-container">
+        {/* Header */}
+        <div className="analytics-header mb-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">Analytics</h1>
+            <p className="text-sm md:text-base text-dark-lighter">Track your account performance and engagement metrics</p>
+          </div>
+          <div className="analytics-date-filter">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="flex items-center gap-2">
+                <HiCalendar className="w-5 h-5 text-primary" />
+                <label className="text-sm font-medium text-dark">Date Range:</label>
+              </div>
+              <div className="relative">
+                <select
+                  className="form-select pl-10 pr-9"
+                  style={{ width: 'auto', minWidth: '160px', padding: '10px 35px 10px 40px' }}
+                  value={dateRange}
+                  onChange={handleDateRangeChange}
+                >
+                  <option value="7days">Last 7 days</option>
+                  <option value="30days">Last 30 days</option>
+                  <option value="90days">Last 90 days</option>
+                  <option value="6months">Last 6 months</option>
+                  <option value="year">Last year</option>
+                  <option value="all">All time</option>
+                  <option value="custom">Custom range</option>
+                </select>
+                <HiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-dark-lighter pointer-events-none" />
+              </div>
+              {showCustomRange && (
+                <div className="flex gap-2 items-center flex-wrap bg-white p-3 rounded-lg border border-dark-20">
+                  <input
+                    type="date"
+                    className="form-input"
+                    style={{ width: '140px', padding: '8px 12px' }}
+                    value={customStartDate}
+                    onChange={(e) => setCustomStartDate(e.target.value)}
+                  />
+                  <span className="text-dark-lighter text-sm">to</span>
+                  <input
+                    type="date"
+                    className="form-input"
+                    style={{ width: '140px', padding: '8px 12px' }}
+                    value={customEndDate}
+                    onChange={(e) => setCustomEndDate(e.target.value)}
+                  />
+                  <Button variant="primary" onClick={handleApplyCustomRange} className="px-4 py-2">
+                    Apply
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
-          {/* Legend */}
-          <div className="mt-4 flex items-center justify-center gap-5">
+        </div>
+
+        {/* Stats Cards */}
+        <div className="analytics-stats-grid mb-8">
+          <div className="analytics-stat-card">
+            <div className="analytics-stat-icon-wrapper bg-primary-light">
+              <HiUsers className="analytics-stat-icon text-primary" />
+            </div>
+            <div className="analytics-stat-content">
+              <div className="analytics-stat-value">{statsToShow.followers.toLocaleString()}</div>
+              <div className="analytics-stat-label">Total Followers</div>
+              <div className="analytics-stat-trend">
+                <HiTrendingUp className="w-4 h-4 text-primary" />
+                <span className="text-xs text-primary font-medium">+12.5%</span>
+              </div>
+            </div>
+          </div>
+          <div className="analytics-stat-card">
+            <div className="analytics-stat-icon-wrapper bg-primary-light">
+              <HiHeart className="analytics-stat-icon text-primary" />
+            </div>
+            <div className="analytics-stat-content">
+              <div className="analytics-stat-value">{statsToShow.engagement.toLocaleString()}</div>
+              <div className="analytics-stat-label">Total Engagement</div>
+              <div className="analytics-stat-trend">
+                <HiTrendingUp className="w-4 h-4 text-primary" />
+                <span className="text-xs text-primary font-medium">+8.2%</span>
+              </div>
+            </div>
+          </div>
+          <div className="analytics-stat-card">
+            <div className="analytics-stat-icon-wrapper bg-primary-light">
+              <HiDocumentText className="analytics-stat-icon text-primary" />
+            </div>
+            <div className="analytics-stat-content">
+              <div className="analytics-stat-value">{statsToShow.posts}</div>
+              <div className="analytics-stat-label">Total Posts</div>
+              <div className="analytics-stat-trend">
+                <HiTrendingUp className="w-4 h-4 text-primary" />
+                <span className="text-xs text-primary font-medium">+3 this week</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Post Engagement Chart */}
+        <div className="analytics-chart-card mb-8">
+          <div className="analytics-chart-header">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-primary rounded-sm"></div>
-              <span className="text-xs text-dark-light">Engagement</span>
+              <HiChartBar className="w-5 h-5 text-primary" />
+              <h2 className="text-xl font-bold text-dark">Post Engagement</h2>
+            </div>
+          </div>
+          <div className="analytics-chart-content">
+            {/* Bar Chart */}
+            <div className="analytics-chart-wrapper">
+              {/* Y-axis labels */}
+              <div className="analytics-chart-y-axis">
+                <span>200</span>
+                <span>150</span>
+                <span>100</span>
+                <span>50</span>
+                <span>0</span>
+              </div>
+              {/* Chart bars */}
+              <div className="analytics-chart-bars">
+                {chartData.map((data, index) => {
+                  const height = (data.value / maxValue) * 200;
+                  return (
+                    <div key={index} className="analytics-chart-bar-group">
+                      <div className="analytics-chart-bar-container">
+                        <div
+                          className="analytics-chart-bar"
+                          style={{ height: `${height}px` }}
+                        >
+                          <div className="analytics-chart-bar-value">{data.value}</div>
+                        </div>
+                      </div>
+                      <div className="analytics-chart-bar-label">{data.day}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            {/* Legend */}
+            <div className="analytics-chart-legend">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-primary rounded-sm"></div>
+                <span className="text-xs text-dark-light font-medium">Engagement</span>
+              </div>
             </div>
           </div>
         </div>
-      </Card>
 
-      {/* Top Performing Posts */}
-      <Card className="mt-5">
-        <div className="card-title">Top Performing Posts</div>
-        <div className="table-wrapper">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Post Title</th>
-                <th>Engagement</th>
-                <th>Views</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-            {postsToShow.map((post) => (
-              <tr key={post.id}>
-                <td>{post.title}</td>
-                <td>{post.engagement}</td>
-                <td>{post.views.toLocaleString()}</td>
-                <td>{post.date}</td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
+        {/* Top Performing Posts */}
+        <div className="analytics-posts-card">
+          <div className="analytics-posts-header">
+            <div className="flex items-center gap-2">
+              <HiDocumentText className="w-5 h-5 text-primary" />
+              <h2 className="text-xl font-bold text-dark">Top Performing Posts</h2>
+            </div>
+          </div>
+          <div className="analytics-posts-content">
+            <div className="table-wrapper">
+              <table className="analytics-posts-table">
+                <thead>
+                  <tr>
+                    <th>Post Title</th>
+                    <th>
+                      <div className="flex items-center gap-1.5">
+                        <HiHeart className="w-4 h-4" />
+                        Engagement
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center gap-1.5">
+                        <HiEye className="w-4 h-4" />
+                        Views
+                      </div>
+                    </th>
+                    <th>
+                      <div className="flex items-center gap-1.5">
+                        <HiClock className="w-4 h-4" />
+                        Date
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {postsToShow.map((post, index) => (
+                    <tr key={post.id} className={index === 0 ? 'analytics-top-post' : ''}>
+                      <td className="analytics-post-title">
+                        <div className="flex items-center gap-2">
+                          {index === 0 && (
+                            <span className="analytics-rank-badge">#1</span>
+                          )}
+                          <span className="font-medium text-dark">{post.title}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-1.5">
+                          <HiHeart className="w-4 h-4 text-primary" />
+                          <span className="font-medium text-dark">{post.engagement}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-1.5">
+                          <HiEye className="w-4 h-4 text-dark-lighter" />
+                          <span className="text-dark-lighter">{post.views.toLocaleString()}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="flex items-center gap-1.5">
+                          <HiClock className="w-4 h-4 text-dark-lighter" />
+                          <span className="text-dark-lighter">{post.date}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </Card>
+      </div>
     </Layout>
   );
 }

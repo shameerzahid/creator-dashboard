@@ -1,7 +1,8 @@
 /**
  * Main Dashboard (Business Account)
- * Screen 6: Main Dashboard - matches wireframe exactly
+ * Enhanced production-ready design with better visual hierarchy
  */
+import { HiDocumentText, HiInbox, HiCog, HiDeviceMobile, HiUsers, HiChartBar, HiLockClosed, HiExclamationCircle, HiClock } from 'react-icons/hi';
 import { Button, Card } from '../components/common';
 import { Layout } from '../components/layout';
 
@@ -59,142 +60,188 @@ export default function Dashboard({
     >
       {/* Verification Banner */}
       {!isVerified && (
-        <Card className="mb-[30px]" style={{ 
-          background: 'rgba(239, 68, 68, 0.15)', 
-          border: '2px solid #EF4444', 
-          boxShadow: '0 2px 8px rgba(239, 68, 68, 0.2)' 
-        }}>
-          <div className="flex justify-between items-center">
-            <div className="flex-1">
-              <div className="font-bold text-dark mb-1.5 text-base">
-                ⚠️ Account not verified
+        <div className="mb-8 p-5 bg-danger-light border-l-4 border-danger rounded-lg shadow-md">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-start gap-3 flex-1">
+              <div className="flex-shrink-0 w-6 h-6 text-danger mt-0.5">
+                <HiExclamationCircle className="w-6 h-6" />
               </div>
-              <div className="text-sm text-dark-light">
-                Start verification to unlock all features including Inbox, Menu Configuration, and Mini Apps
+              <div className="flex-1">
+                <div className="font-bold text-dark mb-1.5 text-base">
+                  Account not verified
+                </div>
+                <div className="text-sm text-dark-light leading-relaxed">
+                  Start verification to unlock all features including Inbox, Menu Configuration, and Mini Apps
+                </div>
               </div>
             </div>
             <Button
               variant="primary"
               onClick={onStartVerification}
-              className="whitespace-nowrap ml-5"
+              className="whitespace-nowrap px-6 py-2.5 font-semibold shadow-lg hover:shadow-xl"
             >
               Start Verification
             </Button>
           </div>
-        </Card>
+        </div>
       )}
 
-      <h1 className="mb-[30px] text-2xl text-dark">Dashboard</h1>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">Dashboard</h1>
+        <p className="text-sm md:text-base text-dark-lighter">Welcome back! Here's what's happening with your account.</p>
+      </div>
 
       {/* Quick Actions */}
-      <Card className="mb-[30px]">
-        <div className="card-title">Quick Actions</div>
+      <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 mb-8">
+        <h2 className="text-lg md:text-xl font-bold text-dark mb-5">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Create Post */}
           <button
             onClick={onCreatePost}
-            className="btn btn-primary w-full text-left justify-start flex items-center p-4 no-underline"
+            className="group relative bg-primary text-white rounded-lg p-5 text-left hover:bg-primary/90 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2.5">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10 9 9 9 8 9"></polyline>
-            </svg>
-            <span>Create Post</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                <HiDocumentText className="w-6 h-6" />
+              </div>
+              <span className="font-semibold text-base">Create Post</span>
+            </div>
           </button>
 
           {/* Open Inbox (Locked if not verified) */}
           <button
             disabled={!isVerified}
-            className={`btn btn-primary w-full text-left justify-start flex items-center p-4 no-underline relative ${
-              !isVerified ? 'opacity-50 cursor-not-allowed' : ''
+            onClick={() => onNavClick?.('inbox')}
+            className={`group relative rounded-lg p-5 text-left transition-all ${
+              !isVerified
+                ? 'bg-gray-100 text-dark-lighter cursor-not-allowed'
+                : 'bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg hover:-translate-y-0.5'
             }`}
-            style={{ pointerEvents: !isVerified ? 'none' : 'auto' }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2.5">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            <span>Open Inbox</span>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                !isVerified ? 'bg-dark-05' : 'bg-white/20'
+              }`}>
+                <HiInbox className="w-6 h-6" />
+              </div>
+              <span className="font-semibold text-base">Open Inbox</span>
+            </div>
             {!isVerified && (
-              <span className="absolute top-1.5 right-1.5 bg-danger-light text-danger text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold">
-                🔒 Locked
-              </span>
+              <div className="absolute top-2 right-2 flex items-center gap-1 bg-danger-light text-danger text-xs px-2 py-1 rounded-full font-semibold">
+                <HiLockClosed className="w-3 h-3" />
+                <span>Locked</span>
+              </div>
             )}
           </button>
 
           {/* Configure Menu (Locked if not verified) */}
           <button
             disabled={!isVerified}
-            className={`btn btn-primary w-full text-left justify-start flex items-center p-4 no-underline relative ${
-              !isVerified ? 'opacity-50 cursor-not-allowed' : ''
+            onClick={() => onNavClick?.('menu')}
+            className={`group relative rounded-lg p-5 text-left transition-all ${
+              !isVerified
+                ? 'bg-gray-100 text-dark-lighter cursor-not-allowed'
+                : 'bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg hover:-translate-y-0.5'
             }`}
-            style={{ pointerEvents: !isVerified ? 'none' : 'auto' }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2.5">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
-            </svg>
-            <span>Configure Menu</span>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                !isVerified ? 'bg-dark-05' : 'bg-white/20'
+              }`}>
+                <HiCog className="w-6 h-6" />
+              </div>
+              <span className="font-semibold text-base">Configure Menu</span>
+            </div>
             {!isVerified && (
-              <span className="absolute top-1.5 right-1.5 bg-danger-light text-danger text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold">
-                🔒 Locked
-              </span>
+              <div className="absolute top-2 right-2 flex items-center gap-1 bg-danger-light text-danger text-xs px-2 py-1 rounded-full font-semibold">
+                <HiLockClosed className="w-3 h-3" />
+                <span>Locked</span>
+              </div>
             )}
           </button>
 
           {/* Mini Apps (Locked if not verified) */}
           <button
             disabled={!isVerified}
-            className={`btn btn-primary w-full text-left justify-start flex items-center p-4 no-underline relative ${
-              !isVerified ? 'opacity-50 cursor-not-allowed' : ''
+            onClick={() => onNavClick?.('miniapps')}
+            className={`group relative rounded-lg p-5 text-left transition-all ${
+              !isVerified
+                ? 'bg-gray-100 text-dark-lighter cursor-not-allowed'
+                : 'bg-primary text-white hover:bg-primary/90 shadow-md hover:shadow-lg hover:-translate-y-0.5'
             }`}
-            style={{ pointerEvents: !isVerified ? 'none' : 'auto' }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-2.5">
-              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
-              <line x1="12" y1="18" x2="12.01" y2="18"></line>
-            </svg>
-            <span>Mini Apps</span>
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                !isVerified ? 'bg-dark-05' : 'bg-white/20'
+              }`}>
+                <HiDeviceMobile className="w-6 h-6" />
+              </div>
+              <span className="font-semibold text-base">Mini Apps</span>
+            </div>
             {!isVerified && (
-              <span className="absolute top-1.5 right-1.5 bg-danger-light text-danger text-[10px] px-1.5 py-0.5 rounded-[10px] font-semibold">
-                🔒 Locked
-              </span>
+              <div className="absolute top-2 right-2 flex items-center gap-1 bg-danger-light text-danger text-xs px-2 py-1 rounded-full font-semibold">
+                <HiLockClosed className="w-3 h-3" />
+                <span>Locked</span>
+              </div>
             )}
           </button>
         </div>
-      </Card>
+      </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-[30px]">
-        <div className="stat-card">
-          <div className="stat-value">{stats.followers.toLocaleString()}</div>
-          <div className="stat-label">Followers</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+              <HiUsers className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="text-3xl md:text-4xl font-bold text-dark mb-1">{stats.followers.toLocaleString()}</div>
+          <div className="text-sm text-dark-lighter">Followers</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value">{stats.totalPosts}</div>
-          <div className="stat-label">Total Posts</div>
+        
+        <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+              <HiDocumentText className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="text-3xl md:text-4xl font-bold text-dark mb-1">{stats.totalPosts}</div>
+          <div className="text-sm text-dark-lighter">Total Posts</div>
         </div>
-        <div className="stat-card">
-          <div className="stat-value">{stats.engagement.toLocaleString()}</div>
-          <div className="stat-label">Engagement</div>
+        
+        <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 hover:shadow-lg transition-all">
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-12 h-12 bg-primary-light rounded-lg flex items-center justify-center">
+              <HiChartBar className="w-6 h-6 text-primary" />
+            </div>
+          </div>
+          <div className="text-3xl md:text-4xl font-bold text-dark mb-1">{stats.engagement.toLocaleString()}</div>
+          <div className="text-sm text-dark-lighter">Engagement</div>
         </div>
       </div>
 
       {/* Recent Activity */}
-      <Card>
-        <div className="card-title">Recent Activity</div>
-        {activity.map((item, index) => (
-          <div
-            key={index}
-            className={`py-2.5 ${index < activity.length - 1 ? 'border-b border-dark-20' : ''}`}
-          >
-            <div className="font-medium">{item.title}</div>
-            <div className="text-xs text-dark-lighter mt-1.5">{item.time}</div>
-          </div>
-        ))}
-      </Card>
+      <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6">
+        <h2 className="text-lg md:text-xl font-bold text-dark mb-5">Recent Activity</h2>
+        <div className="space-y-4">
+          {activity.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-3 pb-4 last:pb-0 border-b border-dark-20 last:border-0"
+            >
+              <div className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                <HiClock className="w-4 h-4 text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-dark mb-1">{item.title}</div>
+                <div className="text-xs text-dark-lighter">{item.time}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </Layout>
   );
 }

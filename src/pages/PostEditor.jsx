@@ -1,9 +1,10 @@
 /**
  * Post Editor Page
- * Screen 9: Post Editor - matches wireframe exactly
+ * Enhanced production-ready design with better UX
  */
 import { useState } from 'react';
-import { Button, Input, Textarea, Card, Badge } from '../components/common';
+import { HiDocumentText, HiPhotograph, HiSave, HiPaperAirplane, HiEye, HiX, HiExclamationCircle } from 'react-icons/hi';
+import { Button, Input, Textarea, Badge } from '../components/common';
 import { Layout } from '../components/layout';
 
 export default function PostEditor({ 
@@ -105,114 +106,154 @@ export default function PostEditor({
         onLogout: () => window.location.href = '/',
       }}
     >
-      <h1 className="mb-[30px] text-2xl text-dark">
-        {post ? 'Edit Post' : 'Create Post'}
-      </h1>
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">
+          {post ? 'Edit Post' : 'Create Post'}
+        </h1>
+        <p className="text-sm md:text-base text-dark-lighter">
+          {post ? 'Update your post content and settings' : 'Write and publish your new post'}
+        </p>
+      </div>
 
-      <Card>
-        <Input
-          label="Post Title"
-          required
-          value={formData.title}
-          onChange={handleTitleChange}
-          placeholder="Enter post title"
-          maxLength={100}
-        />
-        <div className={`char-counter ${titleCharCount > 90 ? 'warning' : ''}`}>
-          <span>{titleCharCount}</span>/100 characters
-        </div>
+      <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 md:p-8">
+        <div className="space-y-6">
+          {/* Post Title */}
+          <div>
+            <Input
+              label="Post Title"
+              required
+              icon={HiDocumentText}
+              value={formData.title}
+              onChange={handleTitleChange}
+              placeholder="Enter post title"
+              maxLength={100}
+            />
+            <div className={`flex justify-end items-center gap-1 mt-1.5 text-xs ${
+              titleCharCount > 90 ? 'text-danger' : 'text-dark-lighter'
+            }`}>
+              {titleCharCount > 90 && <HiExclamationCircle className="w-3 h-3" />}
+              <span className={titleCharCount > 90 ? 'font-semibold' : ''}>
+                {titleCharCount}/100 characters
+              </span>
+            </div>
+          </div>
 
-        <Textarea
-          label="Content"
-          required
-          value={formData.content}
-          onChange={handleContentChange}
-          placeholder="Write your post content here..."
-          rows={8}
-          maxLength={2000}
-          style={{ minHeight: '200px' }}
-        />
-        <div className={`char-counter ${contentCharCount > 1800 ? 'warning' : ''}`}>
-          <span>{contentCharCount}</span>/2000 characters
-        </div>
-        <div className="text-xs text-dark-lighter mt-1.5">
-          Minimum 50 characters required
-        </div>
+          {/* Content */}
+          <div>
+            <Textarea
+              label="Content"
+              required
+              icon={HiDocumentText}
+              value={formData.content}
+              onChange={handleContentChange}
+              placeholder="Write your post content here..."
+              rows={8}
+              maxLength={2000}
+              style={{ minHeight: '200px' }}
+            />
+            <div className="flex justify-between items-center mt-1.5">
+              <div className="text-xs text-dark-lighter">
+                Minimum 50 characters required
+              </div>
+              <div className={`flex items-center gap-1 text-xs ${
+                contentCharCount > 1800 ? 'text-danger' : 'text-dark-lighter'
+              }`}>
+                {contentCharCount > 1800 && <HiExclamationCircle className="w-3 h-3" />}
+                <span className={contentCharCount > 1800 ? 'font-semibold' : ''}>
+                  {contentCharCount}/2000 characters
+                </span>
+              </div>
+            </div>
+          </div>
 
-        <div className="form-group">
-          <label className="form-label">Media (Optional)</label>
-          {!mediaPreview ? (
-            <div
-              className="upload-area p-5"
-              onClick={() => document.getElementById('file-input')?.click()}
-            >
-              <input
-                type="file"
-                id="file-input"
-                accept="image/*,video/*"
-                onChange={handleMediaUpload}
-                className="hidden"
-              />
-              <svg
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(3, 38, 37, 0.5)"
-                strokeWidth="2"
-                className="mb-2.5"
+          {/* Media Upload */}
+          <div className="mb-5">
+            <label className="block mb-3 font-medium text-dark text-sm">Media (Optional)</label>
+            {!mediaPreview ? (
+              <div
+                className="border-2 border-dashed border-dark-lighter rounded-lg p-8 text-center cursor-pointer hover:border-primary hover:bg-primary-light transition-all"
+                onClick={() => document.getElementById('file-input')?.click()}
               >
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
-              <div>Click to upload images or videos</div>
-              <div className="text-xs text-dark-lighter mt-1.5">
-                PNG, JPG, MP4 up to 10MB
+                <input
+                  type="file"
+                  id="file-input"
+                  accept="image/*,video/*"
+                  onChange={handleMediaUpload}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center">
+                  <div className="w-16 h-16 rounded-full bg-primary-light flex items-center justify-center mb-4">
+                    <HiPhotograph className="w-8 h-8 text-primary" />
+                  </div>
+                  <div className="text-sm font-medium text-dark mb-1">Click to upload images or videos</div>
+                  <div className="text-xs text-dark-lighter">PNG, JPG, MP4 up to 10MB</div>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div>
-              <img
-                src={mediaPreview}
-                alt="Preview"
-                className="max-w-full max-h-[300px] rounded-sm border border-dark-20 mb-2.5"
-              />
-              <div className="flex gap-2.5">
-                <Button variant="outline" onClick={handleRemoveMedia}>
-                  Remove
-                </Button>
+            ) : (
+              <div className="space-y-3">
+                <div className="relative inline-block">
+                  <img
+                    src={mediaPreview}
+                    alt="Preview"
+                    className="max-w-full max-h-[300px] rounded-lg border-2 border-dark-20 shadow-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveMedia}
+                    className="absolute top-2 right-2 w-8 h-8 bg-danger text-white rounded-full flex items-center justify-center hover:bg-danger/90 transition-colors shadow-lg"
+                  >
+                    <HiX className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <div className="form-group">
-          <label className="form-label">Status</label>
-          <div className="mt-2.5">
-            <Badge variant={formData.status === 'published' ? 'published' : 'draft'}>
-              {formData.status === 'published' ? 'Published' : 'Draft'}
-            </Badge>
+          {/* Status */}
+          <div className="mb-5">
+            <label className="block mb-3 font-medium text-dark text-sm">Status</label>
+            <div className="mt-2.5">
+              <Badge variant={formData.status === 'published' ? 'published' : 'draft'}>
+                {formData.status === 'published' ? 'Published' : 'Draft'}
+              </Badge>
+            </div>
           </div>
         </div>
 
-        <div className="mt-[30px] pt-5 border-t border-dark-20">
-          <div className="action-buttons">
-            <Button variant="outline" onClick={onPreview}>
+        {/* Action Buttons */}
+        <div className="mt-8 pt-6 border-t border-dark-20">
+          <div className="flex flex-col sm:flex-row gap-3 justify-end">
+            <Button 
+              variant="outline" 
+              onClick={onPreview}
+              className="px-6 py-2.5"
+            >
+              <HiEye className="w-4 h-4 inline mr-2" />
               Preview
             </Button>
-            <Button variant="secondary" onClick={handleSaveDraft}>
+            <Button 
+              variant="outline" 
+              onClick={handleSaveDraft}
+              className="px-6 py-2.5"
+            >
+              <HiSave className="w-4 h-4 inline mr-2" />
               Save as Draft
             </Button>
-            <Button variant="success" onClick={handlePublish}>
+            <Button 
+              variant="primary" 
+              onClick={handlePublish}
+              className="px-8 py-2.5 font-semibold shadow-lg hover:shadow-xl"
+            >
+              <HiPaperAirplane className="w-4 h-4 inline mr-2" />
               Publish
             </Button>
           </div>
-          <div className="mt-4 text-xs text-dark-lighter">
+          <div className="mt-4 text-xs text-dark-lighter text-center sm:text-right">
             Publishing will notify followers
           </div>
         </div>
-      </Card>
+      </div>
     </Layout>
   );
 }

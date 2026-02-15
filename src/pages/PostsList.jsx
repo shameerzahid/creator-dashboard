@@ -1,9 +1,10 @@
 /**
  * Posts List Page
- * Screen 8: Posts List - matches wireframe exactly
+ * Enhanced production-ready design with better UX
  */
 import { useState } from 'react';
-import { Button, Card, Badge, Modal } from '../components/common';
+import { HiSearch, HiDocumentText, HiPencil, HiTrash, HiPlus, HiFilter, HiSortAscending } from 'react-icons/hi';
+import { Button, Badge, Modal } from '../components/common';
 import { Layout } from '../components/layout';
 
 export default function PostsList({ 
@@ -96,85 +97,123 @@ export default function PostsList({
         onLogout: () => window.location.href = '/',
       }}
     >
-      <div className="flex justify-between items-center mb-[30px] flex-wrap gap-4">
-        <h1 className="text-2xl text-dark">Posts</h1>
-        <Button variant="primary" onClick={onCreatePost}>
-          + Create Post
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">Posts</h1>
+          <p className="text-sm md:text-base text-dark-lighter">Manage and organize your posts</p>
+        </div>
+        <Button 
+          variant="primary" 
+          onClick={onCreatePost}
+          className="px-6 py-3 font-semibold shadow-lg hover:shadow-xl"
+        >
+          <HiPlus className="w-5 h-5 inline mr-2" />
+          Create Post
         </Button>
       </div>
 
-      <Card>
+      <div className="bg-white rounded-lg shadow-md border border-dark-20 p-6 md:p-8">
         {/* Search and Filters */}
-        <div className="flex gap-4 mb-5 flex-wrap items-center">
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1 min-w-[250px] relative">
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-lighter pointer-events-none">
+              <HiSearch className="w-5 h-5" />
+            </div>
             <input
               type="text"
-              className="form-input pl-10"
+              className="w-full pl-10 pr-3 py-2.5 border border-dark-lighter rounded-sm text-sm text-dark placeholder:text-dark-lightest transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
               placeholder="Search posts by title..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(3, 38, 37, 0.5)"
-              strokeWidth="2"
-              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
           </div>
           <div className="flex gap-2.5">
-            <select
-              className="form-select"
-              style={{ width: '150px' }}
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="all">All Status</option>
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-              <option value="archived">Archived</option>
-            </select>
-            <select
-              className="form-select"
-              style={{ width: '150px' }}
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-            >
-              <option value="date">Sort by Date</option>
-              <option value="title">Sort by Title</option>
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-            </select>
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-lighter pointer-events-none z-10">
+                <HiFilter className="w-4 h-4" />
+              </div>
+              <select
+                className="pl-9 pr-9 py-2.5 border border-dark-lighter rounded-sm text-sm text-dark bg-white appearance-none cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                style={{
+                  width: '150px',
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23032625' fill-opacity='0.5' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  backgroundSize: '12px'
+                }}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="draft">Draft</option>
+                <option value="published">Published</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+            <div className="relative">
+              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-dark-lighter pointer-events-none z-10">
+                <HiSortAscending className="w-4 h-4" />
+              </div>
+              <select
+                className="pl-9 pr-9 py-2.5 border border-dark-lighter rounded-sm text-sm text-dark bg-white appearance-none cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                style={{
+                  width: '150px',
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23032625' fill-opacity='0.5' d='M6 9L1 4h10z'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'right 10px center',
+                  backgroundSize: '12px'
+                }}
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="date">Sort by Date</option>
+                <option value="title">Sort by Title</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
           </div>
         </div>
 
         {/* Filter Tabs */}
-        <div className="filter-tabs mb-5">
+        <div className="flex gap-0 border-b border-dark-20 mb-6">
           <button
-            className={`filter-tab ${activeTab === 'all' ? 'active' : ''}`}
+            className={`px-4 md:px-6 py-3 text-sm font-medium transition-all border-b-2 ${
+              activeTab === 'all'
+                ? 'text-primary border-primary'
+                : 'text-dark-lighter border-transparent hover:text-dark hover:border-dark-20'
+            }`}
             onClick={() => setActiveTab('all')}
           >
             All
           </button>
           <button
-            className={`filter-tab ${activeTab === 'draft' ? 'active' : ''}`}
+            className={`px-4 md:px-6 py-3 text-sm font-medium transition-all border-b-2 ${
+              activeTab === 'draft'
+                ? 'text-primary border-primary'
+                : 'text-dark-lighter border-transparent hover:text-dark hover:border-dark-20'
+            }`}
             onClick={() => setActiveTab('draft')}
           >
             Draft
           </button>
           <button
-            className={`filter-tab ${activeTab === 'published' ? 'active' : ''}`}
+            className={`px-4 md:px-6 py-3 text-sm font-medium transition-all border-b-2 ${
+              activeTab === 'published'
+                ? 'text-primary border-primary'
+                : 'text-dark-lighter border-transparent hover:text-dark hover:border-dark-20'
+            }`}
             onClick={() => setActiveTab('published')}
           >
             Published
           </button>
           <button
-            className={`filter-tab ${activeTab === 'archived' ? 'active' : ''}`}
+            className={`px-4 md:px-6 py-3 text-sm font-medium transition-all border-b-2 ${
+              activeTab === 'archived'
+                ? 'text-primary border-primary'
+                : 'text-dark-lighter border-transparent hover:text-dark hover:border-dark-20'
+            }`}
             onClick={() => setActiveTab('archived')}
           >
             Archived
@@ -182,54 +221,63 @@ export default function PostsList({
         </div>
 
         {/* Posts Table */}
-        <div className="table-wrapper">
-          <table className="table">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse min-w-[600px]">
             <thead>
-              <tr>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Created</th>
-                <th>Actions</th>
+              <tr className="border-b-2 border-dark-20">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-primary bg-primary-lighter">Title</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-primary bg-primary-lighter">Status</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-primary bg-primary-lighter">Created</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-primary bg-primary-lighter">Actions</th>
               </tr>
             </thead>
             <tbody>
-            {postsToShow.map((post) => (
-              <tr key={post.id}>
-                <td>
+            {postsToShow.map((post, index) => (
+              <tr 
+                key={post.id}
+                className={`border-b border-dark-20 hover:bg-primary-lighter transition-colors ${
+                  index === postsToShow.length - 1 ? 'border-b-0' : ''
+                }`}
+              >
+                <td className="px-4 py-4">
                   <a
                     href="#"
-                    className="clickable-title"
+                    className="flex items-center gap-2 text-dark font-medium hover:text-primary transition-colors no-underline"
                     onClick={(e) => {
                       e.preventDefault();
                       onEditPost?.(post);
                     }}
                   >
+                    <HiDocumentText className="w-4 h-4 text-dark-lighter" />
                     {post.title}
                   </a>
                 </td>
-                <td>{getStatusBadge(post.status)}</td>
-                <td>{post.created}</td>
-                <td style={{ whiteSpace: 'nowrap' }}>
-                  <button
-                    className="icon-btn"
-                    onClick={() => onEditPost?.(post)}
-                    style={{ marginRight: '8px' }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="icon-btn"
-                    onClick={() => handleDeleteClick(post)}
-                  >
-                    Delete
-                  </button>
+                <td className="px-4 py-4">{getStatusBadge(post.status)}</td>
+                <td className="px-4 py-4 text-sm text-dark-lighter">{post.created}</td>
+                <td className="px-4 py-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="flex items-center gap-1.5 px-3 py-1.5 border border-dark-lighter rounded-md text-sm text-dark hover:bg-primary-light hover:border-primary hover:text-primary transition-all"
+                      onClick={() => onEditPost?.(post)}
+                    >
+                      <HiPencil className="w-4 h-4" />
+                      <span>Edit</span>
+                    </button>
+                    <button
+                      className="flex items-center gap-1.5 px-3 py-1.5 border border-danger rounded-md text-sm text-danger hover:bg-danger-light transition-all"
+                      onClick={() => handleDeleteClick(post)}
+                    >
+                      <HiTrash className="w-4 h-4" />
+                      <span>Delete</span>
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
             </tbody>
           </table>
         </div>
-      </Card>
+      </div>
 
       {/* Delete Confirmation Modal */}
       <Modal

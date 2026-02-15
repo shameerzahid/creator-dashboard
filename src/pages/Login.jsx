@@ -1,14 +1,16 @@
 /**
  * Login Page
- * Screen 2: Login - matches wireframe exactly with default, error, and loading states
+ * Enhanced production-ready design with icons and better UX
  */
 import { useState } from 'react';
+import { HiMail, HiLockClosed, HiArrowLeft } from 'react-icons/hi';
 import { Button, Input, Card } from '../components/common';
 import { Header } from '../components/layout';
 
 export default function Login({ onBackClick, onSignUpClick, onForgotPasswordClick, onSubmit }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [showErrorState, setShowErrorState] = useState(false);
@@ -59,10 +61,11 @@ export default function Login({ onBackClick, onSignUpClick, onForgotPasswordClic
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-lighter to-white">
       <Header
         showAccountSwitcher={false}
         onUserMenuClick={null}
+        className="header-enhanced"
         headerRight={
           <div className="header-right">
             <a 
@@ -71,98 +74,123 @@ export default function Login({ onBackClick, onSignUpClick, onForgotPasswordClic
                 e.preventDefault();
                 onBackClick?.();
               }}
-              className="text-secondary no-underline hover:underline"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-secondary no-underline font-medium hover:bg-primary-light hover:text-primary transition-all"
             >
-              Back to Home
+              <HiArrowLeft className="text-base" />
+              <span>Back to Home</span>
             </a>
           </div>
         }
       />
       
-      <div className="flex justify-center items-center min-h-[600px] p-10">
-        <div className="w-full max-w-[400px]">
+      <div className="flex justify-center items-center min-h-[calc(100vh-64px)] p-4 md:p-8">
+        <div className="w-full max-w-md">
           <form onSubmit={handleSubmit}>
-            <Card>
-              <h1 className="text-center mb-[30px] text-3xl text-dark">Login</h1>
+            <div className="bg-white rounded-lg shadow-xl border border-dark-20 p-6 md:p-8">
+              {/* Header */}
+              <div className="text-center mb-8">
+                <h1 className="text-3xl md:text-4xl font-bold text-dark mb-2">Welcome Back</h1>
+                <p className="text-sm md:text-base text-dark-lighter">Sign in to your account to continue</p>
+              </div>
               
               {/* Error Summary */}
               {showErrorState && errors.general && (
-                <div className="form-error-summary mb-5">
-                  {errors.general}
+                <div className="mb-6 p-4 bg-danger-light border border-danger rounded-md flex items-start gap-3">
+                  <svg className="w-5 h-5 text-danger flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-sm text-danger flex-1">{errors.general}</span>
                 </div>
               )}
               
-              <Input
-                label="Email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (errors.email) {
-                    setErrors({ ...errors, email: '' });
-                  }
-                }}
-                error={!!errors.email}
-                errorMessage={errors.email}
-                disabled={isLoading}
-              />
-              
-              <Input
-                label="Password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  if (errors.password) {
-                    setErrors({ ...errors, password: '' });
-                  }
-                }}
-                error={!!errors.password}
-                errorMessage={errors.password}
-                disabled={isLoading}
-              />
-              
-              <div className="form-group">
+              {/* Form Fields */}
+              <div className="space-y-5">
+                <Input
+                  label="Email"
+                  type="email"
+                  placeholder="Enter your email"
+                  icon={HiMail}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (errors.email) {
+                      setErrors({ ...errors, email: '' });
+                    }
+                  }}
+                  error={!!errors.email}
+                  errorMessage={errors.email}
+                  disabled={isLoading}
+                />
+                
+                <Input
+                  label="Password"
+                  type="password"
+                  placeholder="Enter your password"
+                  icon={HiLockClosed}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (errors.password) {
+                      setErrors({ ...errors, password: '' });
+                    }
+                  }}
+                  error={!!errors.password}
+                  errorMessage={errors.password}
+                  disabled={isLoading}
+                />
+                
+                {/* Remember Me & Forgot Password */}
+                <div className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 text-primary border-dark-lighter rounded focus:ring-2 focus:ring-primary focus:ring-offset-0 cursor-pointer"
+                      disabled={isLoading}
+                    />
+                    <span className="text-sm text-dark group-hover:text-primary transition-colors">Remember me</span>
+                  </label>
+                  
+                  <a 
+                    href="#" 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onForgotPasswordClick?.();
+                    }}
+                    className="text-sm text-secondary no-underline hover:text-primary hover:underline transition-all"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+                
+                {/* Submit Button */}
                 <Button 
                   type="submit"
                   variant="primary" 
-                  className="w-full"
+                  className="w-full py-3 text-base font-semibold"
                   loading={isLoading}
                   disabled={isLoading}
                 >
-                  Login
+                  {isLoading ? 'Signing in...' : 'Sign In'}
                 </Button>
               </div>
               
-              <div className="text-center mt-4 text-sm text-dark-lighter">
-                <a 
-                  href="#" 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onForgotPasswordClick?.();
-                  }}
-                  className="text-secondary no-underline hover:underline"
-                >
-                  Forgot password?
-                </a>
-              </div>
-              
-              <div className="text-center mt-5 text-sm text-dark-lighter">
-                Don't have an account?{' '}
+              {/* Footer */}
+              <div className="mt-6 text-center">
+                <span className="text-sm text-dark-lighter">Don't have an account? </span>
                 <a 
                   href="#" 
                   onClick={(e) => {
                     e.preventDefault();
                     onSignUpClick?.();
                   }}
-                  className="text-secondary no-underline hover:underline"
+                  className="text-sm text-secondary no-underline font-medium hover:text-primary hover:underline transition-all"
                 >
                   Sign up
                 </a>
               </div>
-            </Card>
+            </div>
           </form>
         </div>
       </div>
